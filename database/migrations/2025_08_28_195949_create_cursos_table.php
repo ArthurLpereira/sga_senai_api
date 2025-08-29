@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cursos', function (Blueprint $table) {
-            $table->id('id_curso');
+            $table->id();
             $table->string('nome_curso', 220);
             $table->string('cor_curso', 45);
             $table->decimal('valor_curso', 10, 2);
-            $table->foreignId('categoria_curso_id')->constrained('categorias_cursos', 'id_categoria_curso');
+            $table->foreignId('categoria_curso_id')->constrained('categorias_cursos', 'id');
             $table->timestamps();
         });
     }

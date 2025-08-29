@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('alteracao_turma', function (Blueprint $table) {
-            $table->id('id_alteracao_turma');
+            $table->id();
             $table->dateTime('data_hora_alteracao_turma');
             $table->string('descricao_alteracao_turma', 220);
             $table->string('justificativa_alteracao_turma', 220);
-            $table->foreignId('colaborador_id')->constrained('colaboradores', 'id_colaborador');
+            $table->foreignId('colaborador_id')->constrained('colaboradores', 'id');
             $table->timestamps();
         });
     }

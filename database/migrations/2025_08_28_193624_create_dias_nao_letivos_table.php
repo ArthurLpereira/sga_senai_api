@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dias_nao_letivos', function (Blueprint $table) {
-            $table->id('id_dia_nao_letivo');
+            $table->id();
             $table->date('data_dia_nao_letivo');
             $table->string('descricao_dia_nao_letivo', 220);
             $table->enum('tipo_feriado_dia_nao_letivo', ['Municipal', 'Estadual', 'Nacional', 'Emenda', 'Ponto Facultativo']);

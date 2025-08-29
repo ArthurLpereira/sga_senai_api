@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ambientes', function (Blueprint $table) {
-            $table->id('id_ambiente');
+            $table->id();
             $table->string('nome_ambiente', 220);
-            $table->integer('capacidade_ambiente')->nullable();
+            $table->integer('num_ambiente')->nullable();
+            $table->integer('capacidade_ambiente');
             $table->enum('status_ambiente', [0, 1]);
             $table->timestamps();
         });

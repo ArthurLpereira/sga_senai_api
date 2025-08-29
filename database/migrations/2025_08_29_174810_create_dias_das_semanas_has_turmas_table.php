@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dias_das_semanas', function (Blueprint $table) {
-            $table->id();
-            $table->string('nome_dia_da_semana', 220);
+        Schema::create('dias_das_semanas_has_turmas', function (Blueprint $table) {
+            $table->foreignId('dia_da_semana_id')->constrained('dias_das_semanas', 'id');
+            $table->foreignId('turma_id')->constrained('turmas', 'id');
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dias_das_semanas');
+        Schema::dropIfExists('dias_das_semanas_has_turmas');
     }
 };
