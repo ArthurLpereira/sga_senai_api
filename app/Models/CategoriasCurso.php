@@ -5,22 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Ambiente
+ * Class CategoriasCurso
  *
  * @property $id
- * @property $nome_ambiente
- * @property $num_ambiente
- * @property $capacidade_ambiente
- * @property $status_ambiente
+ * @property $nome_categoria_curso
  * @property $created_at
  * @property $updated_at
  *
- * @property Turma[] $turmas
- * @property Turma[] $turmas
+ * @property Curso[] $cursos
+ * @property Curso[] $cursos
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Ambiente extends Model
+class CategoriasCurso extends Model
 {
 
     protected $perPage = 20;
@@ -30,7 +27,7 @@ class Ambiente extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['nome_ambiente', 'num_ambiente', 'capacidade_ambiente', 'status_ambiente', 'id'];
+    protected $fillable = ['nome_categoria_curso'];
 
 
     /**
@@ -40,8 +37,8 @@ class Ambiente extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function turmas()
+    public function cursos()
     {
-        return $this->hasMany(\App\Models\Turma::class, 'id', 'ambiente_id');
+        return $this->hasMany(\App\Models\Curso::class, 'id', 'categoria_curso_id');
     }
 }

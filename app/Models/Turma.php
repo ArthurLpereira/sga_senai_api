@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class Turma
+ *
+ * @property $id
+ * @property $nome_turma
+ * @property $capacidade_turma
+ * @property $data_inicio_turma
+ * @property $data_termino_turma
+ * @property $curso_id
+ * @property $ambiente_id
+ * @property $status_turma_id
+ * @property $minuto_aula_id
+ * @property $turno_id
+ * @property $created_at
+ * @property $updated_at
+ *
+ * @property Ambiente $ambiente
+ * @property Curso $curso
+ * @property MinutosAula $minutosAula
+ * @property StatusTurma $statusTurma
+ * @property Turno $turno
+ * @property ColaboladoresHasTurma[] $colaboladoresHasTurmas
+ * @property DiasDaSemanasHasTurma[] $diasDaSemanasHasTurmas
+ * @property ColaboradoresHasTurma[] $colaboradoresHasTurmas
+ * @property DiasDasSemanasHasTurma[] $diasDasSemanasHasTurmas
+ * @package App
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
+class Turma extends Model
+{
+
+    protected $perPage = 20;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = ['nome_turma', 'capacidade_turma', 'data_inicio_turma', 'data_termino_turma', 'curso_id', 'ambiente_id', 'status_turma_id', 'minuto_aula_id', 'turno_id'];
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ambiente()
+    {
+        return $this->belongsTo(\App\Models\Ambiente::class, 'ambiente_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function curso()
+    {
+        return $this->belongsTo(\App\Models\Curso::class, 'curso_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function minutosAula()
+    {
+        return $this->belongsTo(\App\Models\MinutosAula::class, 'minuto_aula_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function statusTurma()
+    {
+        return $this->belongsTo(\App\Models\StatusTurma::class, 'status_turma_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function turno()
+    {
+        return $this->belongsTo(\App\Models\Turno::class, 'turno_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    // public function colaboladoresHasTurmas()
+    // {
+    //     return $this->hasMany(\App\Models\ColaboladoresHasTurma::class, 'id_turma', 'Turmas_id_turma');
+    // }
+
+    // /**
+    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    //  */
+    // public function diasDaSemanasHasTurmas()
+    // {
+    //     return $this->hasMany(\App\Models\DiasDaSemanasHasTurma::class, 'id_turma', 'turmas_id_turma');
+    // }
+
+    // /**
+    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    //  */
+    // public function colaboradoresHasTurmas()
+    // {
+    //     return $this->hasMany(\App\Models\ColaboradoresHasTurma::class, 'id', 'turma_id');
+    // }
+
+    // /**
+    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    //  */
+    // public function diasDasSemanasHasTurmas()
+    // {
+    //     return $this->hasMany(\App\Models\DiasDasSemanasHasTurma::class, 'id', 'turma_id');
+    // }
+
+}

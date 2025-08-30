@@ -5,22 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Ambiente
+ * Class MinutosAula
  *
  * @property $id
- * @property $nome_ambiente
- * @property $num_ambiente
- * @property $capacidade_ambiente
- * @property $status_ambiente
+ * @property $quant_minuto_aula
  * @property $created_at
  * @property $updated_at
  *
  * @property Turma[] $turmas
- * @property Turma[] $turmas
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Ambiente extends Model
+class MinutosAula extends Model
 {
 
     protected $perPage = 20;
@@ -30,18 +26,14 @@ class Ambiente extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['nome_ambiente', 'num_ambiente', 'capacidade_ambiente', 'status_ambiente', 'id'];
+    protected $fillable = ['quant_minuto_aula'];
 
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function turmas()
     {
-        return $this->hasMany(\App\Models\Turma::class, 'id', 'ambiente_id');
+        return $this->hasMany(\App\Models\Turma::class, 'id', 'minuto_aula_id');
     }
 }
