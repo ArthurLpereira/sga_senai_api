@@ -14,6 +14,12 @@ class AmbienteResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id:' => $this->id,
+            'Nome do ambiente:' => $this->nome_ambiente,
+            'Número do ambiente:' => $this->num_ambiente,
+            'Capacidade do ambiente:' => $this->capacidade_ambiente,
+            'Status do ambiente:' => $this->status_ambiente,
+        ];
     }
 }

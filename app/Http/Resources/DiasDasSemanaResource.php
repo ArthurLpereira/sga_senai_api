@@ -14,6 +14,10 @@ class DiasDasSemanaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        // return parent::toArray($request);
+        return [
+            'id:' => $this->id,
+            'Dia da semana:' => $this->nome_dia_da_semana,
+        ];
     }
 }

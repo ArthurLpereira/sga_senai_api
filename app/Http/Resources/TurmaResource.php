@@ -14,6 +14,34 @@ class TurmaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        // return parent::toArray($request);
+        return [
+            'id:' => $this->id,
+            'Nome da turma:' => $this->nome_turma,
+            'Capacidade da turma:' => $this->capacidade_turma,
+
+            'Curso:' => $this->whenLoaded('curso', function () {
+                return $this->curso->nome_curso;
+            }),
+
+            'Ambiente:' => $this->whenLoaded('ambiente', function () {
+                return $this->ambiente->nome_ambiente;
+            }),
+
+            'Status:' => $this->whenLoaded('statusTurma', function () {
+                return $this->statusTurma->nome_status_turma;
+            }),
+
+            'Status:' => $this->whenLoaded('minutosAula', function () {
+                return $this->minutosAula->quant_minuto_aula;
+            }),
+
+            'Turno:' => $this->whenLoaded('turno', function () {
+                return $this->turno->nome_turno;
+            }),
+
+            'Data de inicio:' => $this->data_inicio_turma,
+            'Data de termino:' => $this->data_termino_turma,
+        ];
     }
 }

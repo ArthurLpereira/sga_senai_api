@@ -14,6 +14,12 @@ class DiasNaoLetivoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        // return parent::toArray($request);
+        return [
+            'id:' => $this->id,
+            'Data:' => $this->data_dia_nao_letivo,
+            'Descricão:' => $this->descricao_dia_nao_letivo,
+            'Tipo de feriado:' => $this->tipo_feriado_dia_nao_letivo,
+        ];
     }
 }

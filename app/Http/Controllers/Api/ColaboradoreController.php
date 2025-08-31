@@ -12,47 +12,37 @@ use App\Http\Resources\ColaboradoreResource;
 
 class ColaboradoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        $colaboradores = Colaboradore::paginate();
-
+        $colaboradores = Colaboradore::with('tiposColaboradore')->paginate(15);
         return ColaboradoreResource::collection($colaboradores);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ColaboradoreRequest $request): JsonResponse
     {
         $colaboradore = Colaboradore::create($request->validated());
 
-        return response()->json(new ColaboradoreResource($colaboradore));
+        $colaboradore->load('tiposColaboradore');
+
+        return response()->json(new ColaboradoreResource($colaboradore), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Colaboradore $colaboradore): JsonResponse
     {
+
+        $colaboradore->load('tiposColaboradore');
+
         return response()->json(new ColaboradoreResource($colaboradore));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ColaboradoreRequest $request, Colaboradore $colaboradore): JsonResponse
     {
         $colaboradore->update($request->validated());
+        $colaboradore->load('tiposColaboradore');
 
         return response()->json(new ColaboradoreResource($colaboradore));
     }
 
-    /**
-     * Delete the specified resource.
-     */
     public function destroy(Colaboradore $colaboradore): Response
     {
         $colaboradore->delete();

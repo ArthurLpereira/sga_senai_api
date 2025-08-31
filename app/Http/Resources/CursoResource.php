@@ -14,6 +14,16 @@ class CursoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        // return parent::toArray($request);
+        return [
+            'id:' => $this->id,
+            'Nome do curso:' => $this->nome_curso,
+            'Cor do curso:' => $this->cor_curso,
+            'Preço:' => $this->valor_curso,
+
+            'Categoria:' => $this->whenLoaded('categoriasCurso', function () {
+                return $this->categoriasCurso->nome_categoria_curso;
+            })
+        ];
     }
 }

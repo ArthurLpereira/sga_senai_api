@@ -17,9 +17,9 @@ class AlteracoesTurmaController extends Controller
      */
     public function index(Request $request)
     {
-        $alteracoesTurmas = AlteracoesTurma::paginate();
-
-        return AlteracoesTurmaResource::collection($alteracoesTurmas);
+        // Carrega o relacionamento 'colaboradore' para a lista
+        $alteracoesTurma = AlteracoesTurma::with('colaboradore')->paginate(15);
+        return AlteracoesTurmaResource::collection($alteracoesTurma);
     }
 
     /**
@@ -29,7 +29,10 @@ class AlteracoesTurmaController extends Controller
     {
         $alteracoesTurma = AlteracoesTurma::create($request->validated());
 
-        return response()->json(new AlteracoesTurmaResource($alteracoesTurma));
+        // Carrega o relacionamento no objeto recém-criado
+        $alteracoesTurma->load('colaboradore');
+
+        return response()->json(new AlteracoesTurmaResource($alteracoesTurma), 201);
     }
 
     /**
@@ -37,6 +40,9 @@ class AlteracoesTurmaController extends Controller
      */
     public function show(AlteracoesTurma $alteracoesTurma): JsonResponse
     {
+        // Carrega o relacionamento no objeto encontrado
+        $alteracoesTurma->load('colaboradore');
+
         return response()->json(new AlteracoesTurmaResource($alteracoesTurma));
     }
 
@@ -46,6 +52,9 @@ class AlteracoesTurmaController extends Controller
     public function update(AlteracoesTurmaRequest $request, AlteracoesTurma $alteracoesTurma): JsonResponse
     {
         $alteracoesTurma->update($request->validated());
+
+        // Carrega o relacionamento no objeto atualizado
+        $alteracoesTurma->load('colaboradore');
 
         return response()->json(new AlteracoesTurmaResource($alteracoesTurma));
     }

@@ -17,7 +17,8 @@ class CursoController extends Controller
      */
     public function index(Request $request)
     {
-        $cursos = Curso::paginate();
+        // ALTERAÇÃO: Adicionado o with() para carregar o relacionamento da categoria
+        $cursos = Curso::with('categoriasCurso')->paginate(15);
 
         return CursoResource::collection($cursos);
     }
@@ -29,7 +30,10 @@ class CursoController extends Controller
     {
         $curso = Curso::create($request->validated());
 
-        return response()->json(new CursoResource($curso));
+        // ALTERAÇÃO: Carrega o relacionamento no objeto recém-criado
+        $curso->load('categoriasCurso');
+
+        return response()->json(new CursoResource($curso), 201);
     }
 
     /**
@@ -37,6 +41,9 @@ class CursoController extends Controller
      */
     public function show(Curso $curso): JsonResponse
     {
+        // ALTERAÇÃO: Carrega o relacionamento no objeto encontrado
+        $curso->load('categoriasCurso');
+
         return response()->json(new CursoResource($curso));
     }
 
@@ -46,6 +53,9 @@ class CursoController extends Controller
     public function update(CursoRequest $request, Curso $curso): JsonResponse
     {
         $curso->update($request->validated());
+
+        // ALTERAÇÃO: Carrega o relacionamento no objeto atualizado
+        $curso->load('categoriasCurso');
 
         return response()->json(new CursoResource($curso));
     }

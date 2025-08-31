@@ -17,7 +17,8 @@ class TurmaController extends Controller
      */
     public function index(Request $request)
     {
-        $turmas = Turma::paginate();
+        // Carrega todos os relacionamentos necessários para a lista de turmas
+        $turmas = Turma::with(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno'])->paginate(15);
 
         return TurmaResource::collection($turmas);
     }
@@ -29,7 +30,10 @@ class TurmaController extends Controller
     {
         $turma = Turma::create($request->validated());
 
-        return response()->json(new TurmaResource($turma));
+        // Carrega os relacionamentos no objeto recém-criado
+        $turma->load(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno']);
+
+        return response()->json(new TurmaResource($turma), 201);
     }
 
     /**
@@ -37,6 +41,9 @@ class TurmaController extends Controller
      */
     public function show(Turma $turma): JsonResponse
     {
+        // Carrega os relacionamentos no objeto encontrado
+        $turma->load(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno']);
+
         return response()->json(new TurmaResource($turma));
     }
 
@@ -46,6 +53,9 @@ class TurmaController extends Controller
     public function update(TurmaRequest $request, Turma $turma): JsonResponse
     {
         $turma->update($request->validated());
+
+        // Carrega os relacionamentos no objeto atualizado
+        $turma->load(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno']);
 
         return response()->json(new TurmaResource($turma));
     }
