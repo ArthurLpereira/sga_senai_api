@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Turma
@@ -85,36 +87,26 @@ class Turma extends Model
         return $this->belongsTo(\App\Models\Turno::class, 'turno_id', 'id');
     }
 
+    public function colaboradores(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Colaboradore::class,
+            'colaborador_turma', // Nome da tabela pivot
+            'turma_id',
+            'colaborador_id'
+        );
+    }
+
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Define o relacionamento Muitos-para-Muitos com Dias da Semana.
      */
-    // public function colaboladoresHasTurmas()
-    // {
-    //     return $this->hasMany(\App\Models\ColaboladoresHasTurma::class, 'id_turma', 'Turmas_id_turma');
-    // }
-
-    // /**
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    //  */
-    // public function diasDaSemanasHasTurmas()
-    // {
-    //     return $this->hasMany(\App\Models\DiasDaSemanasHasTurma::class, 'id_turma', 'turmas_id_turma');
-    // }
-
-    // /**
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    //  */
-    // public function colaboradoresHasTurmas()
-    // {
-    //     return $this->hasMany(\App\Models\ColaboradoresHasTurma::class, 'id', 'turma_id');
-    // }
-
-    // /**
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    //  */
-    // public function diasDasSemanasHasTurmas()
-    // {
-    //     return $this->hasMany(\App\Models\DiasDasSemanasHasTurma::class, 'id', 'turma_id');
-    // }
-
+    public function diasDaSemana(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            DiasDasSemana::class,
+            'dia_da_semana_turma', // Nome da tabela pivot
+            'turma_id',
+            'dia_da_semana_id'
+        );
+    }
 }

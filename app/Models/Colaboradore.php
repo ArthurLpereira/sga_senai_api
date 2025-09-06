@@ -2,60 +2,52 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * Class Colaboradore
- *
- * @property $id
- * @property $nome_colaborador
- * @property $email_colaborador
- * @property $especialidade_colaborador
- * @property $tipo_colaborador_id
- * @property $created_at
- * @property $updated_at
- *
- * @property TiposColaboradore $tiposColaboradore
- * @property AlteracaoTurma[] $alteracaoTurmas
- * @property ColaboradoresHasTurma[] $colaboradoresHasTurmas
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Builder
- */
 class Colaboradore extends Model
 {
+    use HasFactory;
 
-    protected $perPage = 20;
+    // A sua chave primária já é 'id', o que é perfeito.
+
+    protected $fillable = [
+        'nome_colaborador',
+        'email_colaborador',
+        'especialidade_colaborador',
+        'tipo_colaborador_id'
+    ];
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * Define o relacionamento: Um Colaborador pertence a (belongsTo) um TipoColaboradore.
      */
-    protected $fillable = ['nome_colaborador', 'email_colaborador', 'especialidade_colaborador', 'tipo_colaborador_id'];
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function tiposColaboradore()
+    public function tiposColaboradore(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\TiposColaboradore::class, 'tipo_colaborador_id', 'id');
+        return $this->belongsTo(TiposColaboradore::class, 'tipo_colaborador_id', 'id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Define o relacionamento: Um Colaborador tem muitas (hasMany) AlteracoesTurma.
      */
-    public function alteracoesTurmas()
+    public function alteracoesTurmas(): HasMany
     {
-        return $this->hasMany(\App\Models\alteracoesTurma::class, 'id', 'colaborador_id');
+        // Corrigido: A chave estrangeira na tabela 'alteracoes_turmas' e a chave local aqui.
+        return $this->hasMany(AlteracoesTurma::class, 'colaborador_id', 'id');
     }
 
-    // /**
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    //  */
-    // public function colaboradoresHasTurmas()
-    // {
-    //     return $this->hasMany(\App\Models\ColaboradoresHasTurma::class, 'id', 'colaborador_id');
-    // }
-
+    /**
+     * Define o relacionamento Muitos-para-Muitos com Turmas.
+     */
+    public function turmas(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Turma::class,
+            'colaboradores_has_turmas', // 1. Nome da tabela pivot
+            'colaborador_id',    // 2. Chave estrangeira DESTE model na pivot
+            'turma_id'           // 3. Chave estrangeira do OUTRO model na pivot
+        );
+    }
 }

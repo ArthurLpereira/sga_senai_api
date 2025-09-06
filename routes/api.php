@@ -22,3 +22,4 @@ Route::apiResource('colaboradores', App\Http\Controllers\Api\ColaboradoreControl
 Route::apiResource('alteracoes-turmas', App\Http\Controllers\Api\AlteracoesTurmaController::class);
 Route::apiResource('turmas', App\Http\Controllers\Api\TurmaController::class);
 Route::apiResource('tipos-ambientes', App\Http\Controllers\Api\TiposAmbienteController::class);
+Route::apiResource('colaboradores-has-turmas', App\Http\Controllers\Api\ColaboradoresHasTurmaController::class);

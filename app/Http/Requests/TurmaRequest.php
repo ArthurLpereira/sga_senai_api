@@ -22,15 +22,18 @@ class TurmaRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'nome_turma' => 'required|string',
-			'capacidade_turma' => 'required',
-			'data_inicio_turma' => 'required',
-			'data_termino_turma' => 'required',
-			'curso_id' => 'required',
-			'ambiente_id' => 'required',
-			'status_turma_id' => 'required',
-			'minuto_aula_id' => 'required',
-			'turno_id' => 'required',
+            'nome_turma' => 'required|string',
+            'capacidade_turma' => 'required',
+            'data_inicio_turma' => 'required',
+            'data_termino_turma' => 'required',
+            'curso_id' => 'required',
+            'ambiente_id' => 'required',
+            'status_turma_id' => 'required',
+            'minuto_aula_id' => 'required',
+            'turno_id' => 'required',
+
+            'ambiente_id' => 'required',
+            'status_turma_id' => 'required',
         ];
     }
 }

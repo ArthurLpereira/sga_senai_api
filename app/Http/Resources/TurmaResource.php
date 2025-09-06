@@ -40,6 +40,9 @@ class TurmaResource extends JsonResource
                 return $this->turno->nome_turno;
             }),
 
+            'colaboradores' => ColaboradoreResource::collection($this->whenLoaded('colaboradores')),
+            'dias_da_semana' => DiasDasSemanaResource::collection($this->whenLoaded('diasDaSemana')),
+
             'Data de inicio:' => $this->data_inicio_turma,
             'Data de termino:' => $this->data_termino_turma,
         ];

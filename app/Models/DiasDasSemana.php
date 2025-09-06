@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class DiasDasSemana
@@ -30,20 +31,14 @@ class DiasDasSemana extends Model
     protected $fillable = ['nome_dia_da_semana'];
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    // public function diasDaSemanasHasTurmas()
-    // {
-    //     return $this->hasMany(\App\Models\DiasDaSemanasHasTurma::class, 'id_dia_da_semana', 'dias_da_semanas_id_dias_da_semana');
-    // }
-
-    // /**
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    //  */
-    // public function diasDasSemanasHasTurmas()
-    // {
-    //     return $this->hasMany(\App\Models\DiasDasSemanasHasTurma::class, 'id', 'dia_da_semana_id');
-    // }
-
+    public function turmas(): BelongsToMany
+    {
+        // Note que as duas últimas chaves estão invertidas em relação ao Model Turma.
+        return $this->belongsToMany(
+            Turma::class,
+            'dias_das_semanas_has_turmas',      // 1. O nome da sua tabela pivot.
+            'dia_da_semana_id',       // 2. A chave estrangeira DESTE model na pivot.
+            'turma_id'                // 3. A chave estrangeira do OUTRO model na pivot.
+        );
+    }
 }
