@@ -15,9 +15,10 @@ class AmbienteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $ambientes = Ambiente::paginate();
+        // Adicionado: .with('tipoAmbiente') para carregar a relação (Eager Loading)
+        $ambientes = Ambiente::with('tipoAmbiente')->paginate();
 
         return AmbienteResource::collection($ambientes);
     }
@@ -25,30 +26,42 @@ class AmbienteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AmbienteRequest $request): JsonResponse
+    public function store(AmbienteRequest $request): AmbienteResource
     {
         $ambiente = Ambiente::create($request->validated());
 
-        return response()->json(new AmbienteResource($ambiente));
+        // Adicionado: .load('tipoAmbiente') para carregar a relação no modelo recém-criado
+        $ambiente->load('tipoAmbiente');
+
+        // Retornar o resource diretamente ajusta o status HTTP para 201 Created automaticamente
+        return new AmbienteResource($ambiente);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Ambiente $ambiente): JsonResponse
+    public function show(Ambiente $ambiente): AmbienteResource
     {
-        $ambiente = Ambiente::find($ambiente);
-        return response()->json(new AmbienteResource($ambiente));
+        // Removido: A linha '$ambiente = Ambiente::find($ambiente);' era redundante e incorreta
+        // O Laravel já injeta o objeto $ambiente correto (Route-Model Binding)
+
+        // Adicionado: .load('tipoAmbiente') para carregar a relação
+        $ambiente->load('tipoAmbiente');
+
+        return new AmbienteResource($ambiente);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(AmbienteRequest $request, Ambiente $ambiente): JsonResponse
+    public function update(AmbienteRequest $request, Ambiente $ambiente): AmbienteResource
     {
         $ambiente->update($request->validated());
 
-        return response()->json(new AmbienteResource($ambiente));
+        // Adicionado: .load('tipoAmbiente') para carregar a relação no modelo atualizado
+        $ambiente->load('tipoAmbiente');
+
+        return new AmbienteResource($ambiente);
     }
 
     /**

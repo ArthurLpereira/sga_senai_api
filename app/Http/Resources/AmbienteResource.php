@@ -20,6 +20,10 @@ class AmbienteResource extends JsonResource
             'Número do ambiente:' => $this->num_ambiente,
             'Capacidade do ambiente:' => $this->capacidade_ambiente,
             'Status do ambiente:' => $this->status_ambiente,
+
+            'Tipo do ambiente:' => $this->whenLoaded('tipoAmbiente', function () {
+                return $this->tipoAmbiente->nome_tipo_ambiente;
+            })
         ];
     }
 }

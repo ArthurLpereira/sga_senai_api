@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AlteracoesTurma extends Model
 {
-    
+
     protected $perPage = 20;
 
     /**
@@ -39,5 +39,4 @@ class AlteracoesTurma extends Model
     {
         return $this->belongsTo(\App\Models\Colaboradore::class, 'colaborador_id', 'id');
     }
-    
 }

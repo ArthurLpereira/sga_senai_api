@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AmbienteRequest extends FormRequest
+class TiposAmbienteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,7 @@ class AmbienteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome_ambiente' => 'required|string',
-            'capacidade_ambiente' => 'required',
-            'num_ambiente' => 'required',
-            'status_ambiente' => 'required',
-            'tipo_ambiente_id' => 'required'
+			'nome_tipo_ambiente' => 'required|string',
         ];
     }
 }

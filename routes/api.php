@@ -21,3 +21,4 @@ Route::apiResource('dias-das-semanas', App\Http\Controllers\Api\DiasDasSemanaCon
 Route::apiResource('colaboradores', App\Http\Controllers\Api\ColaboradoreController::class);
 Route::apiResource('alteracoes-turmas', App\Http\Controllers\Api\AlteracoesTurmaController::class);
 Route::apiResource('turmas', App\Http\Controllers\Api\TurmaController::class);
+Route::apiResource('tipos-ambientes', App\Http\Controllers\Api\TiposAmbienteController::class);
