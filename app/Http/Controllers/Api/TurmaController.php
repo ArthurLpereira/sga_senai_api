@@ -8,7 +8,10 @@ use App\Http\Resources\TurmaResource;
 use App\Models\Turma;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB; // 1. Importe a classe DB para usar transações
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use App\Services\CalculoDataTerminoService;
+use Illuminate\Http\Request;
 
 class TurmaController extends Controller
 {
@@ -101,5 +104,36 @@ class TurmaController extends Controller
     {
         $turma->delete();
         return response()->noContent();
+    }
+
+    public function calcularDataTermino(Request $request, CalculoDataTerminoService $calculoService): JsonResponse
+    {
+        // 2. Valida os dados de entrada que vêm do formulário (Postman).
+        $validator = Validator::make($request->all(), [
+            'data_inicio_turma' => 'required|date_format:Y-m-d',
+            'carga_horaria_total' => 'required|integer|min:1', // Carga total em horas
+            'duracao_aula_minutos' => 'required|integer|min:1', // Duração da aula em minutos
+            'dias_da_semana_ids' => 'required|array|min:1',
+            'dias_da_semana_ids.*' => 'exists:dias_das_semanas,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $dados = $validator->validated();
+
+        // 3. Chama o nosso serviço para fazer o trabalho pesado.
+        $dataTermino = $calculoService->calcular(
+            $dados['data_inicio_turma'],
+            $dados['carga_horaria_total'],
+            $dados['duracao_aula_minutos'],
+            $dados['dias_da_semana_ids']
+        );
+
+        // 4. Retorna a data calculada como uma resposta JSON.
+        return response()->json([
+            'data_termino_calculada' => $dataTermino,
+        ]);
     }
 }

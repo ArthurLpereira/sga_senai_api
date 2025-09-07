@@ -23,3 +23,4 @@ Route::apiResource('alteracoes-turmas', App\Http\Controllers\Api\AlteracoesTurma
 Route::apiResource('turmas', App\Http\Controllers\Api\TurmaController::class);
 Route::apiResource('tipos-ambientes', App\Http\Controllers\Api\TiposAmbienteController::class);
 Route::apiResource('colaboradores-has-turmas', App\Http\Controllers\Api\ColaboradoresHasTurmaController::class);
+Route::post('/turmas/calcular-data-termino', [App\Http\Controllers\Api\TurmaController::class, 'calcularDataTermino']);
