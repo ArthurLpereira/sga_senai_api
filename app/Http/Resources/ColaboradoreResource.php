@@ -14,16 +14,16 @@ class ColaboradoreResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // return parent::toArray($request);
-        return [
-            'id:' => $this->id,
-            'nome:' => $this->nome_colaborador,
-            'email:' => $this->email_colaborador,
-            'especialidade:' => $this->especialidade_colaborador,
+        return parent::toArray($request);
+        // return [
+        //     'id' => $this->id,
+        //     'nome_colaborador' => $this->nome_colaborador,
+        //     'email_email' => $this->email_colaborador,
+        //     'especialidade_colaborador' => $this->especialidade_colaborador,
 
-            'tipo:' => $this->whenLoaded('tiposColaboradore', function () {
-                return $this->tiposColaboradore->nome_tipo_colaborador;
-            })
-        ];
+        //     'tipo_colaborador_id' => $this->whenLoaded('tiposColaboradore', function () {
+        //         return $this->tiposColaboradore->nome_tipo_colaborador;
+        //     })
+        // ];
     }
 }

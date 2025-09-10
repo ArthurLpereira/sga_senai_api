@@ -14,16 +14,18 @@ class AmbienteResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id:' => $this->id,
-            'Nome do ambiente:' => $this->nome_ambiente,
-            'Número do ambiente:' => $this->num_ambiente,
-            'Capacidade do ambiente:' => $this->capacidade_ambiente,
-            'Status do ambiente:' => $this->status_ambiente,
+        return parent::toArray($request);
 
-            'Tipo do ambiente:' => $this->whenLoaded('tipoAmbiente', function () {
-                return $this->tipoAmbiente->nome_tipo_ambiente;
-            })
-        ];
+        // return [
+        //     'id' => $this->id,
+        //     'nome_ambiente' => $this->nome_ambiente,
+        //     'num_ambiente' => $this->num_ambiente,
+        //     'capacidade_ambiente' => $this->capacidade_ambiente,
+        //     'status_ambiente' => $this->status_ambiente,
+
+        //     'tipo_ambiente_id' => $this->whenLoaded('tipoAmbiente', function () {
+        //         return $this->tipoAmbiente->nome_tipo_ambiente;
+        //     })
+        // ];
     }
 }

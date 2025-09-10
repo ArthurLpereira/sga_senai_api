@@ -14,10 +14,10 @@ class CategoriasCursoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // return parent::toArray($request);
-        return [
-            'id:' => $this->id,
-            'Nome da categoria:' => $this->nome_categoria_curso
-        ];
+        return parent::toArray($request);
+        // return [
+        //     'id' => $this->id,
+        //     'nome_categoria_curso' => $this->nome_categoria_curso
+        // ];
     }
 }

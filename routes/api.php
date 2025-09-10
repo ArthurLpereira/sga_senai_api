@@ -24,3 +24,6 @@ Route::apiResource('turmas', App\Http\Controllers\Api\TurmaController::class);
 Route::apiResource('tipos-ambientes', App\Http\Controllers\Api\TiposAmbienteController::class);
 Route::apiResource('colaboradores-has-turmas', App\Http\Controllers\Api\ColaboradoresHasTurmaController::class);
 Route::post('/turmas/calcular-data-termino', [App\Http\Controllers\Api\TurmaController::class, 'calcularDataTermino']);
+Route::post('/ambientes/{ambiente}/toggle-status', [App\Http\Controllers\Api\AmbienteController::class, 'toggleStatus']);
+Route::post('/cursos/{curso}/toggle-status', [App\Http\Controllers\Api\CursoController::class, 'toggleStatus']);
+Route::post('/colaboradores/{colaboradore}/toggle-status', [App\Http\Controllers\Api\ColaboradoreController::class, 'toggleStatus']);

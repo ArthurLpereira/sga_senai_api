@@ -14,10 +14,10 @@ class TiposColaboradoreResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // return parent::toArray($request);
-        return [
-            'id:' => $this->id,
-            'Tipo de colaborador:' => $this->nome_tipo_colaborador
-        ];
+        return parent::toArray($request);
+        // return [
+        //     'id' => $this->id,
+        //     'nome_tipo_colaborador' => $this->nome_tipo_colaborador
+        // ];
     }
 }

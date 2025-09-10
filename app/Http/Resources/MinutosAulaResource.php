@@ -14,10 +14,10 @@ class MinutosAulaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // return parent::toArray($request);
-        return [
-            'id:' => $this->id,
-            'Minutos de aula:' => $this->quant_minuto_aula
-        ];
+        return parent::toArray($request);
+        // return [
+        //     'id' => $this->id,
+        //     'quant_minuto_aula' => $this->quant_minuto_aula
+        // ];
     }
 }

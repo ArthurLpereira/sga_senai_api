@@ -31,8 +31,11 @@ class Curso extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['nome_curso', 'cor_curso', 'valor_curso', 'categoria_curso_id'];
+    protected $fillable = ['nome_curso', 'cor_curso', 'valor_curso', 'status_curso', 'categoria_curso_id'];
 
+    protected $casts = [
+        'status_curso' => 'boolean',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nome_ambiente', 220);
             $table->integer('num_ambiente')->nullable();
             $table->integer('capacidade_ambiente');
-            $table->enum('status_ambiente', [0, 1]);
+            $table->enum('status_ambiente', [0, 1])->default(1)->nullable();
             $table->foreignId('tipo_ambiente_id')->constrained('tipos_ambientes', 'id');
             $table->timestamps();
         });

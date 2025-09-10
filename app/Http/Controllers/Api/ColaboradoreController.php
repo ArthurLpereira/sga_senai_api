@@ -49,4 +49,17 @@ class ColaboradoreController extends Controller
 
         return response()->noContent();
     }
+
+    public function toggleStatus(Colaboradore $colaboradore): ColaboradoreResource
+    {
+        // 1. Lógica de Alternância (Toggle):
+        $colaboradore->status_colaborador = ($colaboradore->status_colaborador == '1') ? '0' : '1';
+
+        // 2. Guarda a alteração na base de dados.
+        $colaboradore->save();
+
+        // 3. Resposta: Retorna o colaborador completo e atualizado, formatado pelo Resource.
+        //    O `load` garante que o nome do tipo de colaborador é carregado para a resposta.
+        return new ColaboradoreResource($colaboradore->load('tiposColaboradore'));
+    }
 }

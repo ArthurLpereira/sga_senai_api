@@ -14,17 +14,17 @@ class AlteracoesTurmaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // //return parent::toArray($request);
+        return parent::toArray($request);
 
-        return [
-            'id:' => $this->id,
-            'Hora da alteração:' => $this->data_hora_alteracao_turma,
-            'Descrição da mudança:' => $this->descricao_alteracao_turma,
-            'Justificativa da mudança:' => $this->justificativa_alteracao_turma,
+        // return [
+        //     'id' => $this->id,
+        //     'data_hora_alteracao_turma' => $this->data_hora_alteracao_turma,
+        //     'descricao_alteracao_turma' => $this->descricao_alteracao_turma,
+        //     'justificativa_alteracao_turma' => $this->justificativa_alteracao_turma,
 
-            'Colaborador:' => $this->whenLoaded('colaboradore', function () {
-                return $this->colaboradore->nome_colaborador;
-            })
-        ];
+        //     'colaborador_id' => $this->whenLoaded('colaboradore', function () {
+        //         return $this->colaboradore->nome_colaborador;
+        //     })
+        // ];
     }
 }

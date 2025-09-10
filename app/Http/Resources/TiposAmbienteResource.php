@@ -15,9 +15,6 @@ class TiposAmbienteResource extends JsonResource
     public function toArray(Request $request): array
     {
         // return parent::toArray($request);
-        return [
-            'id:' => $this->id,
-            'Nome tipo do ambiente' => $this->nome_tipo_ambiente,
-        ];
+        return parent::toArray($request);
     }
 }

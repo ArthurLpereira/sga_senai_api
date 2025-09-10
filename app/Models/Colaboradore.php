@@ -18,7 +18,8 @@ class Colaboradore extends Model
         'nome_colaborador',
         'email_colaborador',
         'especialidade_colaborador',
-        'tipo_colaborador_id'
+        'status_colaborador',
+        'tipo_colaborador_id',
     ];
 
     /**

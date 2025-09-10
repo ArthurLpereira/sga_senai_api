@@ -73,4 +73,17 @@ class AmbienteController extends Controller
 
         return response()->noContent();
     }
+
+    public function toggleStatus(Ambiente $ambiente): AmbienteResource
+    {
+        // 1. Lógica de Alternância (Toggle):
+        $ambiente->status_ambiente = ($ambiente->status_ambiente == '1') ? '0' : '1';
+
+        // 2. Guarda a alteração na base de dados.
+        $ambiente->save();
+
+        // 3. Resposta: Retorna o ambiente completo e atualizado, formatado pelo Resource.
+        //    O `load` garante que o nome do tipo de ambiente é carregado para a resposta.
+        return new AmbienteResource($ambiente->load('tipoAmbiente'));
+    }
 }

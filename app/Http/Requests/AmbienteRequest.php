@@ -22,11 +22,22 @@ class AmbienteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome_ambiente' => 'required|string',
-            'capacidade_ambiente' => 'required',
-            'num_ambiente' => 'required',
-            'status_ambiente' => 'required',
-            'tipo_ambiente_id' => 'required'
+            // Garante que o nome é uma string com no máximo 220 caracteres.
+            'nome_ambiente' => 'required|string|max:220',
+
+            // Permite que o número seja opcional, mas se for enviado, deve ser um inteiro.
+            'num_ambiente' => 'nullable|integer',
+
+            // Garante que a capacidade é um número inteiro.
+            'capacidade_ambiente' => 'required|integer',
+
+            // Garante que o tipo de ambiente é um inteiro e que o ID enviado
+            // realmente existe na tabela 'tipos_ambientes' na coluna 'id'.
+            // Isto previne erros de chave estrangeira na base de dados.
+            'tipo_ambiente_id' => 'required|integer|exists:tipos_ambientes,id',
+
+            // O status é opcional. Se for enviado, deve ser '0' ou '1'.
+            'status_ambiente' => 'sometimes|in:0,1',
         ];
     }
 }

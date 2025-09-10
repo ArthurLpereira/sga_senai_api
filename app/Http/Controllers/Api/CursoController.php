@@ -69,4 +69,17 @@ class CursoController extends Controller
 
         return response()->noContent();
     }
+
+
+    public function toggleStatus(Curso $curso): CursoResource
+    {
+        // 1. Lógica de Alternância (Toggle):
+        $curso->status_curso = ($curso->status_curso == '1') ? '0' : '1';
+
+        // 2. Guarda a alteração na base de dados.
+        $curso->save();
+
+        // 3. Resposta: Retorna o curso completo e atualizado, formatado pelo Resource.
+        return new CursoResource($curso);
+    }
 }
