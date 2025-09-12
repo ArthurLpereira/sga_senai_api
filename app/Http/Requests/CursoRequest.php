@@ -22,10 +22,9 @@ class CursoRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'nome_curso' => 'required|string',
-			'cor_curso' => 'required|string',
-			'valor_curso' => 'required',
-			'categoria_curso_id' => 'required',
+            'nome_curso' => 'required|string',
+            'cor_curso' => 'required|string',
+            'categoria_curso_id' => 'required',
         ];
     }
 }

@@ -22,10 +22,9 @@ class ColaboradoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'nome_colaborador' => 'required|string',
-			'email_colaborador' => 'required|string',
-			'especialidade_colaborador' => 'required|string',
-			'tipo_colaborador_id' => 'required',
+            'nome_colaborador' => 'required|string',
+            'email_colaborador' => 'required|string',
+            'tipo_colaborador_id' => 'required',
         ];
     }
 }

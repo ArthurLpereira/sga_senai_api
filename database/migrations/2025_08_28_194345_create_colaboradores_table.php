@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nome_colaborador', 220);
             $table->string('email_colaborador', 220);
-            $table->string('especialidade_colaborador', 220);
+            $table->string('especialidade_colaborador', 220)->nullable();
+            $table->string('cor_colaborador', 45)->nullable();
             $table->enum('status_colaborador', [0, 1])->default(1);
             $table->foreignId('tipo_colaborador_id')->constrained('tipos_colaboradores', 'id');
 

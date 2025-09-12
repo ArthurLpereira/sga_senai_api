@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nome_turma', 220);
             $table->integer('capacidade_turma');
             $table->date('data_inicio_turma');
-            $table->date('data_termino_turma');
+            $table->date('data_termino_turma')->nullable();
             $table->foreignId('curso_id')->constrained('cursos', 'id');
             $table->foreignId('ambiente_id')->constrained('ambientes', 'id');
             $table->foreignId('status_turma_id')->constrained('status_turmas', 'id');
