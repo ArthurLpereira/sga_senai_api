@@ -27,3 +27,4 @@ Route::post('/turmas/calcular-data-termino', [App\Http\Controllers\Api\TurmaCont
 Route::post('/ambientes/{ambiente}/toggle-status', [App\Http\Controllers\Api\AmbienteController::class, 'toggleStatus']);
 Route::post('/cursos/{curso}/toggle-status', [App\Http\Controllers\Api\CursoController::class, 'toggleStatus']);
 Route::post('/colaboradores/{colaboradore}/toggle-status', [App\Http\Controllers\Api\ColaboradoreController::class, 'toggleStatus']);
+Route::get ('/calendario', [App\Http\Controllers\Api\HorarioSemanal::class, 'getHorarioSemanal']);

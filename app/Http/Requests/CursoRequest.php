@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class CursoRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determina se o utilizador está autorizado a fazer este pedido.
      */
     public function authorize(): bool
     {
@@ -15,16 +15,29 @@ class CursoRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Obtém as regras de validação que se aplicam ao pedido.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        return [
-            'nome_curso' => 'required|string',
-            'cor_curso' => 'required|string',
-            'categoria_curso_id' => 'required',
+        // Define as regras base que são comuns ou usadas na criação (POST)
+        $regras = [
+            'nome_curso' => 'required|string|max:220',
+            'cor_curso' => 'required|string|max:45',
+            'valor_curso' => 'required|numeric|min:0',
+            'categoria_curso_id' => 'required|integer|exists:categorias_cursos,id',
+            'status_curso' => 'sometimes|boolean',
         ];
+        
+        // Se for um pedido de UPDATE (PUT/PATCH), torna os campos obrigatórios em opcionais.
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $regras['nome_curso'] = 'sometimes|required|string|max:220';
+            $regras['cor_curso'] = 'sometimes|required|string|max:45';
+            $regras['valor_curso'] = 'sometimes|required|numeric|min:0';
+            $regras['categoria_curso_id'] = 'sometimes|required|integer|exists:categorias_cursos,id';
+        }
+
+        return $regras;
     }
 }
