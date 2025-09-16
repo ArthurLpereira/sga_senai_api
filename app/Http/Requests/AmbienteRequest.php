@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class AmbienteRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determina se o utilizador está autorizado a fazer este pedido.
      */
     public function authorize(): bool
     {
@@ -15,29 +15,32 @@ class AmbienteRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Obtém as regras de validação que se aplicam ao pedido.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        return [
-            // Garante que o nome é uma string com no máximo 220 caracteres.
+        // Define as regras base que são comuns ou usadas na criação (POST)
+        $regras = [
             'nome_ambiente' => 'required|string|max:220',
-
-            // Permite que o número seja opcional, mas se for enviado, deve ser um inteiro.
             'num_ambiente' => 'nullable|integer',
-
-            // Garante que a capacidade é um número inteiro.
             'capacidade_ambiente' => 'required|integer',
-
-            // Garante que o tipo de ambiente é um inteiro e que o ID enviado
-            // realmente existe na tabela 'tipos_ambientes' na coluna 'id'.
-            // Isto previne erros de chave estrangeira na base de dados.
             'tipo_ambiente_id' => 'required|integer|exists:tipos_ambientes,id',
-
-            // O status é opcional. Se for enviado, deve ser '0' ou '1'.
-            'status_ambiente' => 'sometimes|in:0,1',
+            'status_ambiente' => 'sometimes|boolean', // `boolean` é melhor que `in:0,1`
         ];
+
+        // --- A LÓGICA PRINCIPAL ESTÁ AQUI ---
+        // Se o método do pedido for PUT ou PATCH (ou seja, um UPDATE)...
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            // ...transformamos as regras 'required' em 'sometimes'.
+            // Isto torna todos os campos opcionais na atualização.
+
+            $regras['nome_ambiente'] = 'sometimes|required|string|max:220';
+            $regras['capacidade_ambiente'] = 'sometimes|required|integer';
+            $regras['tipo_ambiente_id'] = 'sometimes|required|integer|exists:tipos_ambientes,id';
+        }
+
+        return $regras;
     }
 }
