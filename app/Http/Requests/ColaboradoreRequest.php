@@ -24,6 +24,9 @@ class ColaboradoreRequest extends FormRequest
         return [
             'nome_colaborador' => 'required|string',
             'email_colaborador' => 'required|string',
+            'senha_colaborador' => 'required|string',
+            'especialidade_colaborador' => 'required|string',
+            'cor_colaborador' => 'required|string',
             'tipo_colaborador_id' => 'required',
         ];
     }

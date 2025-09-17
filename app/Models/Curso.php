@@ -31,7 +31,7 @@ class Curso extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['nome_curso', 'cor_curso', 'valor_curso', 'status_curso', 'categoria_curso_id'];
+    protected $fillable = ['nome_curso', 'cor_curso', 'valor_curso', 'status_curso', 'categoria_curso_id', 'carga_horaria_curso'];
 
     protected $casts = [
         'status_curso' => 'boolean',

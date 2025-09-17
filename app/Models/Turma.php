@@ -104,7 +104,7 @@ class Turma extends Model
     {
         return $this->belongsToMany(
             DiasDasSemana::class,
-            'dia_da_semana_turma', // Nome da tabela pivot
+            'dia_da_semana_turma',
             'turma_id',
             'dia_da_semana_id'
         );

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('valor_curso', 10, 2)->nullable();
             $table->foreignId('categoria_curso_id')->constrained('categorias_cursos', 'id');
             $table->enum('status_curso', [0, 1])->default(1);
+            $table->integer('carga_horaria_curso');
             $table->timestamps();
         });
     }

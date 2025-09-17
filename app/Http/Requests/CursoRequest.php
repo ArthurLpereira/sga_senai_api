@@ -28,8 +28,9 @@ class CursoRequest extends FormRequest
             'valor_curso' => 'required|numeric|min:0',
             'categoria_curso_id' => 'required|integer|exists:categorias_cursos,id',
             'status_curso' => 'sometimes|boolean',
+            'carga_horaria_curso' => 'required|integer|min:1',
         ];
-        
+
         // Se for um pedido de UPDATE (PUT/PATCH), torna os campos obrigatórios em opcionais.
         if ($this->isMethod('put') || $this->isMethod('patch')) {
             $regras['nome_curso'] = 'sometimes|required|string|max:220';

@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ColaboradoreResource;
+use Illuminate\Support\Facades\Hash;
 
 class ColaboradoreController extends Controller
 {

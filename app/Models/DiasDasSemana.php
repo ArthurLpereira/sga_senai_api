@@ -2,43 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/**
- * Class DiasDasSemana
- *
- * @property $id
- * @property $nome_dia_da_semana
- * @property $created_at
- * @property $updated_at
- *
- * @property DiasDaSemanasHasTurma[] $diasDaSemanasHasTurmas
- * @property DiasDasSemanasHasTurma[] $diasDasSemanasHasTurmas
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Builder
- */
 class DiasDasSemana extends Model
 {
+    use HasFactory;
 
-    protected $perPage = 20;
+    // --- Configuração Essencial do Model ---
+    // Como a sua chave primária é 'id', não precisamos de a definir.
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'dias_das_semanas'; // O nome da sua tabela é no plural
+
     protected $fillable = ['nome_dia_da_semana'];
 
-
+    /**
+     * Define o relacionamento INVERSO Muitos-para-Muitos com Turmas.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function turmas(): BelongsToMany
     {
         // Note que as duas últimas chaves estão invertidas em relação ao Model Turma.
         return $this->belongsToMany(
             Turma::class,
-            'dias_das_semanas_has_turmas',      // 1. O nome da sua tabela pivot.
-            'dia_da_semana_id',       // 2. A chave estrangeira DESTE model na pivot.
-            'turma_id'                // 3. A chave estrangeira do OUTRO model na pivot.
+            'dia_da_semana_turma',
+            'dia_da_semana_id',
+            'turma_id'
         );
     }
 }
