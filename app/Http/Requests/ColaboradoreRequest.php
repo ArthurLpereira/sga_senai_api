@@ -27,7 +27,7 @@ class ColaboradoreRequest extends FormRequest
             'senha_colaborador' => 'required|string',
             'especialidade_colaborador' => 'required|string',
             'cor_colaborador' => 'required|string',
-            'tipo_colaborador_id' => 'required',
+            'tipo_colaborador_id' => 'sometimes|exists:tipos_colaboradores,id',
         ];
     }
 }

@@ -41,3 +41,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 });
+Route::put('/colaboradores/{colaboradore}/update-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'updateNivel']);
+Route::put('/turmas/{turma}/update-nome', [App\Http\Controllers\Api\TurmaController::class, 'updateNome']);
+Route::get('/colaboradores/{colaboradore}/verificar-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'verificarNivel']);

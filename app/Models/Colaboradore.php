@@ -28,6 +28,9 @@ class Colaboradore extends Authenticatable
         'tipo_colaborador_id',
     ];
 
+    protected $attributes = [
+        'tipo_colaborador_id' => 3, // Define o valor padrão como '1' (ativo)
+    ];
     /**
      * 2. ESTA É A VERSÃO CORRETA E SEGURA
      * Usa o sistema de hash do Laravel (Bcrypt com salt)

@@ -63,4 +63,32 @@ class ColaboradoreController extends Controller
         //    O `load` garante que o nome do tipo de colaborador é carregado para a resposta.
         return new ColaboradoreResource($colaboradore->load('tiposColaboradore'));
     }
+
+    public function updateNivel(Request $request, Colaboradore $colaboradore): JsonResponse
+    {
+        // Validação CORRIGIDA e MELHORADA
+        $request->validate([
+            'tipo_colaborador_id' => 'required|exists:tipos_colaboradores,id',
+        ]);
+
+        // CORREÇÃO: Atualize a coluna correta (a chave estrangeira).
+        $colaboradore->tipo_colaborador_id = $request->input('tipo_colaborador_id');
+
+        // Salva a alteração no banco de dados.
+        $colaboradore->save();
+
+        // Retorna o recurso do colaborador atualizado.
+        return response()->json(new ColaboradoreResource($colaboradore));
+    }
+
+    public function verificarNivel(Colaboradore $colaboradore): JsonResponse
+    {
+        // Carrega a relação 'tiposColaboradore' para acessar o nome do tipo.
+        $colaboradore->load('tiposColaboradore');
+
+        // Retorna o nome do tipo de colaborador.
+        return response()->json([
+            'tipo_colaborador' => $colaboradore->tiposColaboradore->nome_tipo_colaborador,
+        ]);
+    }
 }

@@ -136,4 +136,21 @@ class TurmaController extends Controller
             'data_termino_calculada' => $dataTermino,
         ]);
     }
+
+    public function updateNome(Request $request, Turma $turma): JsonResponse
+    {
+        // Validação simples para o nome
+        $request->validate([
+            'nome_turma' => 'required|string|max:255',
+        ]);
+
+        // Atualiza apenas o campo 'nome'
+        $turma->nome_turma = $request->input('nome_turma');
+        $turma->save();
+
+        // Carrega os relacionamentos para a resposta ser completa
+        $turma->load(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno', 'colaboradores', 'diasDaSemana']);
+
+        return response()->json(new TurmaResource($turma));
+    }
 }
