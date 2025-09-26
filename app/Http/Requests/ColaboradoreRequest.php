@@ -21,7 +21,7 @@ class ColaboradoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $regras = [
             'nome_colaborador' => 'required|string',
             'email_colaborador' => 'required|string',
             'senha_colaborador' => 'required|string',
@@ -29,5 +29,15 @@ class ColaboradoreRequest extends FormRequest
             'cor_colaborador' => 'required|string',
             'tipo_colaborador_id' => 'sometimes|exists:tipos_colaboradores,id',
         ];
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $regras['nome_colaborador'] = 'sometimes|required|string';
+            $regras['email_colaborador'] = 'sometimes|required|string';
+            $regras['senha_colaborador'] = 'sometimes|required|string';
+            $regras['especialidade_colaborador'] = 'sometimes|required|string';
+            $regras['cor_colaborador'] = 'sometimes|required|string';
+        }
+
+        return $regras;
     }
 }

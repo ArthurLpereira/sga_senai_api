@@ -153,4 +153,19 @@ class TurmaController extends Controller
 
         return response()->json(new TurmaResource($turma));
     }
+
+    public function getTurmasAtivas(): JsonResponse
+    {
+        $turmasAtivas = Turma::with(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno', 'colaboradores', 'diasDaSemana'])
+            ->whereHas('statusTurma', function ($query) {
+                $query->where('status_turma_id', '1');
+            })
+            ->get();
+
+        $quantTurmas = $turmasAtivas->count();
+        return response()->json([
+            'quantidade' => $quantTurmas,
+            'turmas' => TurmaResource::collection($turmasAtivas)
+        ]);
+    }
 }

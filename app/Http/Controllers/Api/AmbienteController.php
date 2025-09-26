@@ -86,4 +86,37 @@ class AmbienteController extends Controller
         //    O `load` garante que o nome do tipo de ambiente é carregado para a resposta.
         return new AmbienteResource($ambiente->load('tipoAmbiente'));
     }
+
+    public function getAmbientesDisponiveis(): JsonResponse
+    {
+        // Buscar todos os ambientes com status_ambiente igual a '1' (disponíveis)
+        $ambientesDisponiveis = Ambiente::where('status_ambiente', '1')->with('tipoAmbiente')->get();
+        $quantAmbientes = $ambientesDisponiveis->count();
+        // Retornar a lista de ambientes disponíveis como uma resposta JSON
+        return response()->json([
+            'quantidade' => $quantAmbientes,
+            'ambientes' => AmbienteResource::collection($ambientesDisponiveis)
+        ]);
+    }
+
+    public function getTaxaOcupacao(): JsonResponse
+    {
+        $totalAmbientes = Ambiente::count();
+        $ambientesDisponiveis = Ambiente::where('status_ambiente', '0')->count();
+        $ambientesOcupados = $totalAmbientes - $ambientesDisponiveis;
+
+        // Evitar divisão por zero
+        if ($totalAmbientes === 0) {
+            return response()->json([
+                'taxa_ocupacao' => 0,
+                'mensagem' => 'Nenhum ambiente cadastrado.'
+            ]);
+        }
+
+        $taxaOcupacao = ($ambientesOcupados / $totalAmbientes) * 100;
+
+        return response()->json([
+            'taxa_ocupacao' => round($taxaOcupacao, 2) // Arredondar para 2 casas decimais
+        ]);
+    }
 }

@@ -21,7 +21,7 @@ class TurmaRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $regras =  [
             'nome_turma' => 'required|string',
             'capacidade_turma' => 'required',
             'data_inicio_turma' => 'required',
@@ -34,5 +34,18 @@ class TurmaRequest extends FormRequest
             'ambiente_id' => 'required',
             'status_turma_id' => 'required',
         ];
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $regras['nome_turma'] = 'sometimes|required|string';
+            $regras['capacidade_turma'] = 'sometimes|required';
+            $regras['data_inicio_turma'] = 'sometimes|required';
+            $regras['curso_id'] = 'sometimes|required';
+            $regras['ambiente_id'] = 'sometimes|required';
+            $regras['status_turma_id'] = 'sometimes|required';
+            $regras['minuto_aula_id'] = 'sometimes|required';
+            $regras['turno_id'] = 'sometimes|required';
+        }
+
+        return $regras;
     }
 }

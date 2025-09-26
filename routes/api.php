@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+Route::get('ambientes/ambientes-disponiveis', [App\Http\Controllers\Api\AmbienteController::class, 'getAmbientesDisponiveis']);
+Route::get('/ambientes/taxa-ocupacao', [App\Http\Controllers\Api\AmbienteController::class, 'getTaxaOcupacao']);
+Route::get('turmas/turmas-ativas', [App\Http\Controllers\Api\TurmaController::class, 'getTurmasAtivas']);
+Route::get('colaboradores/colaboradores-ativos', [App\Http\Controllers\Api\ColaboradoreController::class, 'getColaboradoresAtivos']);
 
 Route::apiResource('ambientes', App\Http\Controllers\Api\AmbienteController::class);
 Route::apiResource('tipos-colaboradores', App\Http\Controllers\Api\TiposColaboradoreController::class);
@@ -44,3 +48,4 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::put('/colaboradores/{colaboradore}/update-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'updateNivel']);
 Route::put('/turmas/{turma}/update-nome', [App\Http\Controllers\Api\TurmaController::class, 'updateNome']);
 Route::get('/colaboradores/{colaboradore}/verificar-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'verificarNivel']);
+Route::get('ambientes/ambientes-disponiveis', [App\Http\Controllers\Api\AmbienteController::class, 'getAmbientesDisponiveis']);

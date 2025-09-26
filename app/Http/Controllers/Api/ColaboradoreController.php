@@ -83,12 +83,22 @@ class ColaboradoreController extends Controller
 
     public function verificarNivel(Colaboradore $colaboradore): JsonResponse
     {
-        // Carrega a relação 'tiposColaboradore' para acessar o nome do tipo.
-        $colaboradore->load('tiposColaboradore');
-
-        // Retorna o nome do tipo de colaborador.
+        // Retorna diretamente o ID, que já está disponível no objeto $colaboradore.
+        // Não precisa de consulta extra no banco.
         return response()->json([
-            'tipo_colaborador' => $colaboradore->tiposColaboradore->nome_tipo_colaborador,
+            'tipo_colaborador_id' => $colaboradore->tipo_colaborador_id,
+        ]);
+    }
+
+    public function getColaboradoresAtivos(): JsonResponse
+    {
+        // Buscar todos os colaboradores com status_colaborador igual a '1' (ativos)
+        $colaboradoresAtivos = Colaboradore::where('status_colaborador', '1')->with('tiposColaboradore')->get();
+        $quantColaboradores = $colaboradoresAtivos->count();
+        // Retornar a lista de colaboradores ativos como uma resposta JSON
+        return response()->json([
+            'quantidade' => $quantColaboradores,
+            'colaboradores' => ColaboradoreResource::collection($colaboradoresAtivos)
         ]);
     }
 }
