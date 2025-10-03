@@ -12,6 +12,7 @@ Route::get('ambientes/ambientes-disponiveis', [App\Http\Controllers\Api\Ambiente
 Route::get('/ambientes/taxa-ocupacao', [App\Http\Controllers\Api\AmbienteController::class, 'getTaxaOcupacao']);
 Route::get('turmas/turmas-ativas', [App\Http\Controllers\Api\TurmaController::class, 'getTurmasAtivas']);
 Route::get('colaboradores/colaboradores-ativos', [App\Http\Controllers\Api\ColaboradoreController::class, 'getColaboradoresAtivos']);
+Route::get('/ambientes/tipo-ambiente-taxa', [App\Http\Controllers\Api\AmbienteController::class, 'getTaxaOcupacaoPorTipoAmbiente']);
 
 Route::apiResource('ambientes', App\Http\Controllers\Api\AmbienteController::class);
 Route::apiResource('tipos-colaboradores', App\Http\Controllers\Api\TiposColaboradoreController::class);
@@ -49,3 +50,4 @@ Route::put('/colaboradores/{colaboradore}/update-nivel', [App\Http\Controllers\A
 Route::put('/turmas/{turma}/update-nome', [App\Http\Controllers\Api\TurmaController::class, 'updateNome']);
 Route::get('/colaboradores/{colaboradore}/verificar-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'verificarNivel']);
 Route::get('ambientes/ambientes-disponiveis', [App\Http\Controllers\Api\AmbienteController::class, 'getAmbientesDisponiveis']);
+Route::patch('/turmas/{turma}/update-ambiente', [App\Http\Controllers\Api\TurmaController::class, 'updateAmbiente']);

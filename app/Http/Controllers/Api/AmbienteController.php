@@ -9,6 +9,9 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AmbienteResource;
+use Carbon\Carbon;
+use App\Models\Turma;
+use App\Models\TiposAmbiente;
 
 class AmbienteController extends Controller
 {
@@ -89,13 +92,20 @@ class AmbienteController extends Controller
 
     public function getAmbientesDisponiveis(): JsonResponse
     {
-        // Buscar todos os ambientes com status_ambiente igual a '1' (disponíveis)
-        $ambientesDisponiveis = Ambiente::where('status_ambiente', '1')->with('tipoAmbiente')->get();
-        $quantAmbientes = $ambientesDisponiveis->count();
-        // Retornar a lista de ambientes disponíveis como uma resposta JSON
+        // Conta todos os ambientes no total
+        $totalAmbientes = Ambiente::count();
+
+        // Conta apenas os ambientes com status '1' (disponíveis)
+        $ambientesDisponiveis = Ambiente::where('status_ambiente', '1')->count();
+
+        // Calcula os indisponíveis
+        $ambientesIndisponiveis = $totalAmbientes - $ambientesDisponiveis;
+
+        // Retorna todos os dados de uma vez
         return response()->json([
-            'quantidade' => $quantAmbientes,
-            'ambientes' => AmbienteResource::collection($ambientesDisponiveis)
+            'total_ambientes'      => $totalAmbientes,
+            'quantidade_disponiveis' => $ambientesDisponiveis,
+            'quantidade_indisponiveis' => $ambientesIndisponiveis,
         ]);
     }
 
@@ -118,5 +128,57 @@ class AmbienteController extends Controller
         return response()->json([
             'taxa_ocupacao' => round($taxaOcupacao, 2) // Arredondar para 2 casas decimais
         ]);
+    }
+
+    // Adicione esta função ao seu controller, por exemplo, app/Http/Controllers/AmbienteController.php
+    // Substitua a função no seu AmbienteController.php por esta versão
+
+    public function getTaxaOcupacaoPorTipoAmbiente(): JsonResponse
+    {
+        // A busca inicial não muda
+        $todosAmbientes = Ambiente::with('tipoAmbiente')->get();
+
+        // As contagens iniciais não mudam
+        $quantidadeInativos = $todosAmbientes->where('status_ambiente', '0')->count();
+        $ambientesAtivos = $todosAmbientes->where('status_ambiente', '1');
+        $totalAmbientesAtivos = $ambientesAtivos->count();
+
+        // O agrupamento por tipo também não muda
+        $detalhesPorTipo = $ambientesAtivos
+            ->groupBy(function ($ambiente) {
+                return $ambiente->tipoAmbiente->nome_tipo_ambiente ?? 'Tipo não definido';
+            })
+            ->map(function ($grupo) use ($totalAmbientesAtivos) {
+                $quantidadeNoGrupo = $grupo->count();
+                $percentual = ($totalAmbientesAtivos > 0)
+                    ? ($quantidadeNoGrupo / $totalAmbientesAtivos) * 100
+                    : 0;
+
+                return [
+                    'quantidade_neste_tipo' => $quantidadeNoGrupo,
+                    'percentual_do_total_ativo' => round($percentual, 2),
+                ];
+            });
+
+        // --- NOVA LÓGICA ADICIONADA AQUI ---
+        $totalAmbientesCadastrados = $todosAmbientes->count();
+
+        // Novo cálculo: Porcentagem de inativos sobre o total geral
+        $percentualInativos = ($totalAmbientesCadastrados > 0)
+            ? ($quantidadeInativos / $totalAmbientesCadastrados) * 100
+            : 0;
+        // --- FIM DA NOVA LÓGICA ---
+
+        // Montamos o array final da resposta, agora com a nova informação
+        $resultado = [
+            'visao_geral' => [
+                'total_ambientes_cadastrados' => $totalAmbientesCadastrados,
+                'total_ambientes_ativos' => $totalAmbientesAtivos,
+                'total_ambientes_inativos' => $quantidadeInativos,
+            ],
+            'ocupacao_por_tipo' => $detalhesPorTipo,
+        ];
+
+        return response()->json($resultado);
     }
 }

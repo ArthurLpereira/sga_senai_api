@@ -15,13 +15,13 @@ class TurnoSeeder extends Seeder
     public function run(): void
     {
         $turnos = [
-            ['nome_turno' => 'M'],
-            ['nome_turno' => 'T'],
-            ['nome_turno' => 'N'],
-            ['nome_turno' => 'MT'],
-            ['nome_turno' => 'MN'],
-            ['nome_turno' => 'TN'],
-            ['nome_turno' => 'I'],
+            ['nome_turno' => 'Manhã'],
+            ['nome_turno' => 'Tarde'],
+            ['nome_turno' => 'Noite'],
+            ['nome_turno' => 'Manhã-Tarde'],
+            ['nome_turno' => 'Manhã-Noite'],
+            ['nome_turno' => 'Tarde-Noite'],
+            ['nome_turno' => 'Integral'],
         ];
 
         $agora = Carbon::now();

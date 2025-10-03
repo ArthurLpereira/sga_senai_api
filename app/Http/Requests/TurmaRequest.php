@@ -33,6 +33,10 @@ class TurmaRequest extends FormRequest
 
             'ambiente_id' => 'required',
             'status_turma_id' => 'required',
+            'colaboradores_ids' => 'sometimes|array',
+            'colaboradores_ids.*' => 'sometimes|integer|exists:colaboradores,id',
+            'dias_da_semana_ids' => 'sometimes|array',
+            'dias_da_semana_ids.*' => 'sometimes|integer|exists:dias_das_semanas,id',
         ];
 
         if ($this->isMethod('put') || $this->isMethod('patch')) {

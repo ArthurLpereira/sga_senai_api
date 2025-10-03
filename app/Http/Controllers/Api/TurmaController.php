@@ -168,4 +168,21 @@ class TurmaController extends Controller
             'turmas' => TurmaResource::collection($turmasAtivas)
         ]);
     }
+
+    public function updateAmbiente(Request $request, Turma $turma): JsonResponse
+    {
+        // Validação simples para o ambiente
+        $request->validate([
+            'ambiente_id' => 'required|exists:ambientes,id',
+        ]);
+
+        // Atualiza apenas o campo 'ambiente_id'
+        $turma->ambiente_id = $request->input('ambiente_id');
+        $turma->save();
+
+        // Carrega os relacionamentos para a resposta ser completa
+        $turma->load(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno', 'colaboradores', 'diasDaSemana']);
+
+        return response()->json(new TurmaResource($turma));
+    }
 }
