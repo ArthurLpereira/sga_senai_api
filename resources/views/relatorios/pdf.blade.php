@@ -1,144 +1,90 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Planilha Semestral SGA</title>
+    <title>Relatório Semestral de Turmas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: sans-serif;
+            padding: 0;
             margin: 0;
-            background-color: #f0f0f0;
         }
 
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #d82b3a;
-            color: #fff;
-            padding: 15px 30px;
+            background-color: #e53939;
+            width: 100%;
+            height: 10%;
+            position: relative;
+            bottom: 50;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .senai-logo {
-            font-size: 24px;
-            font-weight: 700;
-            padding: 5px 15px;
-            background-color: #fff;
-            color: #d82b3a;
-            border-radius: 5px;
-        }
-
-        .month-header {
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-            margin: 30px 30px 15px 30px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
-        }
-
-        .table-container {
-            margin: 0 30px;
-            background-color: #3e3e3e;
-            padding: 2px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        h2 {
+            background-color: #eee;
+            padding: 10px;
+            margin-top: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 6px;
-            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            text-align: left;
+            padding: 8px;
+            font-size: 12px;
         }
 
         th {
-            background-color: #d82b3a;
-            color: #fff;
-            font-weight: 700;
-            text-align: left;
-            padding: 15px;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #f2f2f2;
         }
 
-        th:last-child {
-            border-right: none;
-        }
-
-        td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            border-right: 1px solid #ddd;
-            font-weight: 400;
-        }
-
-        td:last-child {
-            border-right: none;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f7f7f7;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
+        .no-turmas {
+            color: #888;
         }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Planilha Semestral SGA</h1>
-        <div class="senai-logo">SENAI</div>
+        <h1>Relatório Semestral de Turmas</h1>
+        <p>Gerado em: {{ now()->format('d/m/Y H:i') }}</p>
     </header>
 
-    <h2 class="month-header">Janeiro</h2>
+    @foreach ($turmasPorMes as $nomeMes => $turmasDoMes)
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Capacidade</th>
-                    <th>Início</th>
-                    <th>Fim</th>
-                    <th>Curso</th>
-                    <th>Ambiente</th>
-                    <th>Status</th>
-                    <th>Tempo Aula</th>
-                    <th>Turno</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($turmas as $turma)
-                <tr>
-                    <td>{{ $turma->id }}</td>
-                    <td>{{ $turma->nome_turma}}</td>
-                    <td>{{ $turma->capacidade_turma}}</td>
-                    <td>{{ $turma->data_inicio_turma}}</td>
-                    <td>{{ $turma->data_termino_turma}}</td>
-                    <td>{{ $turma->curso_id}}</td>
-                    <td>{{ $turma->ambiente_id}}</td>
-                    <td>{{ $turma->status_turma_id}}</td>
-                    <td>{{ $turma->minutos_aula_id}}</td>
-                    <td>{{ $turma->turno_id}}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+    <h2>{{ $nomeMes }}</h2>
+
+    @if ($turmasDoMes->count() > 0)
+    <table>
+        <thead>
+            <tr>
+                <th>Turma</th>
+                <th>Curso</th>
+                <th>Turno</th>
+                <th>Período</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($turmasDoMes as $turma)
+            <tr>
+                <td>{{ $turma->nome_turma }}</td>
+                <td>{{ $turma->curso->nome_curso }}</td>
+                <td>{{ $turma->turno->nome_turno }}</td>
+                <td>{{ \Carbon\Carbon::parse($turma->data_inicio_turma)->format('d/m/Y') }} a {{ \Carbon\Carbon::parse($turma->data_termino_turma)->format('d/m/Y') }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @else
+    <p class="no-turmas">Nenhuma turma ativa neste mês.</p>
+    @endif
+
+    @endforeach
+
 </body>
 
 </html>
