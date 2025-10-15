@@ -53,3 +53,4 @@ Route::put('/turmas/{turma}/update-nome', [App\Http\Controllers\Api\TurmaControl
 Route::get('/colaboradores/{colaboradore}/verificar-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'verificarNivel']);
 Route::get('ambientes/ambientes-disponiveis', [App\Http\Controllers\Api\AmbienteController::class, 'getAmbientesDisponiveis']);
 Route::patch('/turmas/{turma}/update-ambiente', [App\Http\Controllers\Api\TurmaController::class, 'updateAmbiente']);
+Route::get('/gerar-pdf', [App\Http\Controllers\Api\PdfController::class, 'gerarPdf'])->name('gerar.pdf');

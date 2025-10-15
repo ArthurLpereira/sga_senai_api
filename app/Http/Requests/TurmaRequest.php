@@ -25,7 +25,11 @@ class TurmaRequest extends FormRequest
             'nome_turma' => 'required|string',
             'capacidade_turma' => 'required',
             'data_inicio_turma' => 'required',
+<<<<<<< HEAD
             'data_termino_turma' => 'sometimes|date|after_or_equal:data_inicio_turma',
+=======
+            'data_termino_turma' => 'sometimes',
+>>>>>>> f40e075a5d2e32c4cbcd5eace7475fcd91bcfb36
             'curso_id' => 'required',
             'ambiente_id' => 'required',
             'status_turma_id' => 'required',
@@ -44,6 +48,7 @@ class TurmaRequest extends FormRequest
             $regras['nome_turma'] = 'sometimes|required|string';
             $regras['capacidade_turma'] = 'sometimes|required';
             $regras['data_inicio_turma'] = 'sometimes|required';
+            $regras['data_termino_turma'] = 'sometimes|required';
             $regras['curso_id'] = 'sometimes|required';
             $regras['ambiente_id'] = 'sometimes|required';
             $regras['status_turma_id'] = 'sometimes|required';
