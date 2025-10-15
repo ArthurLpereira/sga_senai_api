@@ -11,17 +11,29 @@
         }
 
         header {
-            background-color: #e53939;
+            background-color: #9A1915;
             width: 100%;
-            height: 10%;
+            height: 12%;
             position: relative;
             bottom: 50;
+            right: 35;
+            color: #f1f5f9;
+            width: 115%;
         }
 
-        h2 {
-            background-color: #eee;
-            padding: 10px;
-            margin-top: 20px;
+        header div {
+            margin-left: 20px;
+            padding-top: 10px;
+        }
+
+        header div p {
+            font-size: 17px;
+        }
+
+        hr {
+            background-color: #9A1915;
+            border: none;
+            height: 3px;
         }
 
         table {
@@ -39,7 +51,9 @@
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #9A1915;
+            color: #f1f5f9;
+            border: none;
         }
 
         .no-turmas {
@@ -50,14 +64,16 @@
 
 <body>
     <header>
-        <h1>Relatório Semestral de Turmas</h1>
-        <p>Gerado em: {{ now()->format('d/m/Y H:i') }}</p>
+        <div>
+            <h1>Planilha Semestral SGA</h1>
+            <p>Gerado em: {{ now()->format('d/m/Y H:i') }}</p>
+        </div>
     </header>
 
     @foreach ($turmasPorMes as $nomeMes => $turmasDoMes)
 
     <h2>{{ $nomeMes }}</h2>
-
+    <hr>
     @if ($turmasDoMes->count() > 0)
     <table>
         <thead>
