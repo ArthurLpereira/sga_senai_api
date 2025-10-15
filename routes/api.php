@@ -13,7 +13,9 @@ Route::get('/ambientes/taxa-ocupacao', [App\Http\Controllers\Api\AmbienteControl
 Route::get('turmas/turmas-ativas', [App\Http\Controllers\Api\TurmaController::class, 'getTurmasAtivas']);
 Route::get('colaboradores/colaboradores-ativos', [App\Http\Controllers\Api\ColaboradoreController::class, 'getColaboradoresAtivos']);
 Route::get('/ambientes/tipo-ambiente-taxa', [App\Http\Controllers\Api\AmbienteController::class, 'getTaxaOcupacaoPorTipoAmbiente']);
-
+Route::get('/turmas/mensal', [App\Http\Controllers\Api\TurmaController::class, 'getTurmasMensal']);
+Route::get('turmas/semanal', [App\Http\Controllers\Api\TurmaController::class, 'getTurmasSemanal']);
+Route::get('turmas/diario', [App\Http\Controllers\Api\TurmaController::class, 'getTurmasDiario']);
 Route::apiResource('ambientes', App\Http\Controllers\Api\AmbienteController::class);
 Route::apiResource('tipos-colaboradores', App\Http\Controllers\Api\TiposColaboradoreController::class);
 Route::apiResource('categorias-cursos', App\Http\Controllers\Api\CategoriasCursoController::class);
@@ -32,10 +34,9 @@ Route::post('/turmas/calcular-data-termino', [App\Http\Controllers\Api\TurmaCont
 Route::post('/ambientes/{ambiente}/toggle-status', [App\Http\Controllers\Api\AmbienteController::class, 'toggleStatus']);
 Route::post('/cursos/{curso}/toggle-status', [App\Http\Controllers\Api\CursoController::class, 'toggleStatus']);
 Route::post('/colaboradores/{colaboradore}/toggle-status', [App\Http\Controllers\Api\ColaboradoreController::class, 'toggleStatus']);
-Route::get('/horario-semanal', [App\Http\Controllers\Api\HorarioSemanalController::class, 'getHorarioSemanal']);
-Route::get('/horario-mensal', [App\Http\Controllers\Api\HorarioMensalController::class, 'getHorarioMensal']);
-Route::get('/info-diarias', [App\Http\Controllers\Api\InfoDiariaController::class, 'getInfoDiarias']);
+
 Route::post('/login', [App\Http\Controllers\Api\LoginController::class, 'login']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // Rota para fazer logout (revogar o token)
@@ -46,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 });
+
 Route::put('/colaboradores/{colaboradore}/update-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'updateNivel']);
 Route::put('/turmas/{turma}/update-nome', [App\Http\Controllers\Api\TurmaController::class, 'updateNome']);
 Route::get('/colaboradores/{colaboradore}/verificar-nivel', [App\Http\Controllers\Api\ColaboradoreController::class, 'verificarNivel']);

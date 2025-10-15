@@ -25,6 +25,7 @@ class TurmaRequest extends FormRequest
             'nome_turma' => 'required|string',
             'capacidade_turma' => 'required',
             'data_inicio_turma' => 'required',
+            'data_termino_turma' => 'sometimes|date|after_or_equal:data_inicio_turma',
             'curso_id' => 'required',
             'ambiente_id' => 'required',
             'status_turma_id' => 'required',
