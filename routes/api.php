@@ -54,3 +54,4 @@ Route::get('/colaboradores/{colaboradore}/verificar-nivel', [App\Http\Controller
 Route::get('ambientes/ambientes-disponiveis', [App\Http\Controllers\Api\AmbienteController::class, 'getAmbientesDisponiveis']);
 Route::patch('/turmas/{turma}/update-ambiente', [App\Http\Controllers\Api\TurmaController::class, 'updateAmbiente']);
 Route::get('/gerar-pdf', [App\Http\Controllers\Api\pdfController::class, 'gerarPdf'])->name('gerar.pdf');
+Route::get('/gerar-csv', [App\Http\Controllers\Api\csvController::class, 'gerarCsv'])->name('gerar.csv');
