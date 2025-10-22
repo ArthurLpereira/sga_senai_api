@@ -85,9 +85,9 @@ class csvController extends Controller
                         $turma->curso?->nome_curso ?? 'N/A',
                         $turma->turno?->nome_turno ?? 'N/A',
                         $turma->ambiente?->nome_ambiente ?? 'N/A',
-                        $turma->statusTurma?->nome_status ?? 'N/A',
-                        Carbon::parse($turma->data_inicio_turma)->format('d/m/Y'),
-                        Carbon::parse($turma->data_termino_turma)->format('d/m/Y'),
+                        $turma->statusTurma?->nome_status_turma ?? 'N/A',
+                        sprintf('="%s"', Carbon::parse($turma->data_inicio_turma)->format('d/m/Y')),
+                        sprintf('="%s"', Carbon::parse($turma->data_termino_turma)->format('d/m/Y')),
                     ], ';');
                 }
             }
