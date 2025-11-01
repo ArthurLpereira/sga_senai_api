@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TurmaRequest;
 use App\Http\Resources\TurmaResource;
 use App\Models\Turma;
+use App\Models\Ambiente;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -190,101 +191,44 @@ class TurmaController extends Controller
 
     // app/Http/Controllers/TurmaController.php
 
-    public function getTurmasMensal(Request $request)
-    {
-        try {
-            $ano = $request->query('ano');
-            $mes = $request->query('mes');
-            $dataReferencia = Carbon::now();
 
-            if ($ano && $mes) {
-                // =========================================================================
-                // CORREÇÃO APLICADA AQUI
-                // Em vez de usar createSafe(), montamos uma string e usamos o parse(),
-                // que é mais confiável para interpretar os dados vindos de uma requisição.
-                // =========================================================================
-                $dataString = "{$ano}-{$mes}-01"; // Cria a string "2025-1-01"
-                $dataReferencia = Carbon::parse($dataString);
-            }
-
-            $dataInicioMes = $dataReferencia->copy()->startOfMonth();
-            $dataFimMes = $dataReferencia->copy()->endOfMonth();
-
-            $turmasCandidatas = Turma::with(['diasDaSemana', 'turno'])
-                ->where('data_inicio_turma', '<=', $dataFimMes)
-                ->where('data_termino_turma', '>=', $dataInicioMes)
-                ->get();
-
-            if ($turmasCandidatas->isEmpty()) {
-                return response()->json([]);
-            }
-
-            // O restante do código continua exatamente o mesmo...
-            $calendario = [];
-            $periodoDoMes = CarbonPeriod::create($dataInicioMes, $dataFimMes);
-            $diasDeAulaPorTurma = [];
-            foreach ($turmasCandidatas as $turma) {
-                $diasDeAulaPorTurma[$turma->id] = $turma->diasDaSemana->pluck('id')->all();
-            }
-            foreach ($periodoDoMes as $data) {
-                $turmasNesteDia = [];
-                $diaDaSemanaAtual = $data->dayOfWeek + 1;
-                foreach ($turmasCandidatas as $turma) {
-                    $temAulaNoDiaDaSemana = in_array($diaDaSemanaAtual, $diasDeAulaPorTurma[$turma->id]);
-                    $estaNoPeriodoDaTurma = $data->between(
-                        $turma->data_inicio_turma,
-                        $turma->data_termino_turma
-                    );
-                    if ($temAulaNoDiaDaSemana && $estaNoPeriodoDaTurma) {
-                        $turmasNesteDia[] = $turma;
-                    }
-                }
-                if (!empty($turmasNesteDia)) {
-                    $calendario[$data->toDateString()] = $turmasNesteDia;
-                }
-            }
-            return response()->json($calendario);
-        } catch (\Exception $e) {
-            return response()->json([
-                'erro' => 'Ocorreu um erro interno ou os parâmetros de data são inválidos.',
-                'mensagem' => $e->getMessage()
-            ], 500);
-        }
-    }
 
     public function getTurmasSemanal(Request $request)
     {
         try {
             // =========================================================================
-            // PASSO 1: Determinar a data de referência para a semana
+            // PASSO 1: Determinar a data de referência
             // =========================================================================
-
             $dataParam = $request->query('data');
-            $dataReferencia = Carbon::now(); // Padrão: data de hoje
-
-            // Se uma data foi enviada na URL (ex: ?data=2025-11-20), usa ela como referência
-            if ($dataParam) {
-                $dataReferencia = Carbon::parse($dataParam);
-            }
+            $dataReferencia = $dataParam ? Carbon::parse($dataParam) : Carbon::now();
 
             // =========================================================================
             // PASSO 2: Calcular o início e o fim da semana
-            // Carbon considera a semana começando na Segunda. Para alinhar com seu padrão
-            // (Domingo = 1), definimos explicitamente o início no Domingo e o fim no Sábado.
             // =========================================================================
             $dataInicioSemana = $dataReferencia->copy()->startOfWeek(Carbon::SUNDAY);
             $dataFimSemana = $dataReferencia->copy()->endOfWeek(Carbon::SATURDAY);
 
-            // O restante do código é praticamente idêntico ao método mensal,
-            // apenas usando as variáveis de data da semana.
+            // =========================================================================
+            // PASSO 3: Buscar a lista de ambientes (CORRIGIDO)
+            // =========================================================================
 
+            // CORREÇÃO: Removemos o filtro 'where('status_ambiente', 1)'
+            // Agora ele vai pegar TODOS os seus 3 ambientes.
+            $ambientes = Ambiente::orderBy('num_ambiente', 'asc')->get();
+
+            // =========================================================================
+            // PASSO 4: Buscar turmas e construir calendário (Sua lógica original)
+            // =========================================================================
             $turmasCandidatas = Turma::with(['diasDaSemana', 'turno'])
                 ->where('data_inicio_turma', '<=', $dataFimSemana)
                 ->where('data_termino_turma', '>=', $dataInicioSemana)
                 ->get();
 
             if ($turmasCandidatas->isEmpty()) {
-                return response()->json([]);
+                return response()->json([
+                    'ambientes' => $ambientes,
+                    'agendamentos' => []
+                ]);
             }
 
             $calendario = [];
@@ -297,7 +241,7 @@ class TurmaController extends Controller
 
             foreach ($periodoDaSemana as $data) {
                 $turmasNesteDia = [];
-                $diaDaSemanaAtual = $data->dayOfWeek + 1;
+                $diaDaSemanaAtual = $data->dayOfWeek + 1; // 1=Dom, 2=Seg, ...
 
                 foreach ($turmasCandidatas as $turma) {
                     $temAulaNoDiaDaSemana = in_array($diaDaSemanaAtual, $diasDeAulaPorTurma[$turma->id]);
@@ -311,12 +255,18 @@ class TurmaController extends Controller
                     }
                 }
 
-                if (!empty($turmasNesteDia)) {
-                    $calendario[$data->toDateString()] = $turmasNesteDia;
-                }
+                $calendario[$data->toDateString()] = $turmasNesteDia;
             }
 
-            return response()->json($calendario);
+            // =========================================================================
+            // PASSO 5: Montar a resposta unificada
+            // =========================================================================
+            $resposta = [
+                'ambientes' => $ambientes,
+                'agendamentos' => $calendario
+            ];
+
+            return response()->json($resposta);
         } catch (\Exception $e) {
             return response()->json([
                 'erro' => 'Ocorreu um erro interno ou o parâmetro de data é inválido.',
@@ -331,26 +281,115 @@ class TurmaController extends Controller
     {
         try {
             $dataParam = $request->query('data');
-            $dataReferencia = Carbon::now();
 
-            if ($dataParam) {
-                // CORREÇÃO: Usamos createFromFormat para entender o formato DD/MM/YYYY
-                // que você enviou pelo Postman.
-                $dataReferencia = Carbon::createFromFormat('d/m/Y', $dataParam);
-            }
+            // Se ?data= não for enviado, usa hoje.
+            // Carbon::parse() já entende 'YYYY-MM-DD' que o JavaScript enviará.
+            $dataReferencia = $dataParam ? Carbon::parse($dataParam) : Carbon::now();
 
+            // Calcula o dia da semana (1=Domingo, 2=Segunda, etc.)
             $diaDaSemana = $dataReferencia->dayOfWeek + 1;
 
-            $turmasDoDia = Turma::with(['diasDaSemana', 'turno'])
+            $turmasDoDia = Turma::with([
+                'curso',         // <<< NECESSÁRIO PARA O MODAL
+                'colaboradores', // <<< NECESSÁRIO PARA O MODAL (Docentes)
+                'ambiente',      // <<< NECESSÁRIO PARA O MODAL
+                'turno'          // (Já estava)
+            ])
+                // Filtro 1: A turma tem aula neste dia da semana?
                 ->whereHas('diasDaSemana', function ($query) use ($diaDaSemana) {
                     $query->where('dias_das_semanas.id', $diaDaSemana);
                 })
+                // Filtro 2: A data de hoje está dentro do período de início e término da turma?
+                ->where('data_inicio_turma', '<=', $dataReferencia->toDateString())
+                ->where('data_termino_turma', '>=', $dataReferencia->toDateString())
                 ->get();
 
             return response()->json($turmasDoDia);
         } catch (\Exception $e) {
             return response()->json([
                 'erro' => 'Ocorreu um erro interno ou o parâmetro de data é inválido.',
+                'mensagem' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getTurmasMensal(Request $request)
+    {
+        try {
+            $ano = $request->query('ano');
+            $mes = $request->query('mes');
+            $dataReferencia = Carbon::now();
+
+            if ($ano && $mes) {
+                $dataString = "{$ano}-{$mes}-01";
+                $dataReferencia = Carbon::parse($dataString);
+            }
+
+            $dataInicioMes = $dataReferencia->copy()->startOfMonth();
+            $dataFimMes = $dataReferencia->copy()->endOfMonth();
+
+            // =========================================================================
+            // PASSO 1: Buscar a lista de ambientes (A NOVA PARTE)
+            // =========================================================================
+            $ambientes = Ambiente::orderBy('num_ambiente', 'asc')->get();
+
+            // =========================================================================
+            // PASSO 2: Buscar turmas e construir calendário (Sua lógica original)
+            // =========================================================================
+            $turmasCandidatas = Turma::with(['diasDaSemana', 'turno']) // Não precisa de 'curso' ou 'colaboradores' aqui
+                ->where('data_inicio_turma', '<=', $dataFimMes)
+                ->where('data_termino_turma', '>=', $dataInicioMes)
+                ->get();
+
+            if ($turmasCandidatas->isEmpty()) {
+                // CORREÇÃO: Retorna a estrutura correta (ambientes + agendamentos vazios)
+                return response()->json([
+                    'ambientes' => $ambientes,
+                    'agendamentos' => []
+                ]);
+            }
+
+            $calendario = [];
+            $periodoDoMes = CarbonPeriod::create($dataInicioMes, $dataFimMes);
+
+            $diasDeAulaPorTurma = [];
+            foreach ($turmasCandidatas as $turma) {
+                $diasDeAulaPorTurma[$turma->id] = $turma->diasDaSemana->pluck('id')->all();
+            }
+
+            foreach ($periodoDoMes as $data) {
+                $turmasNesteDia = [];
+                $diaDaSemanaAtual = $data->dayOfWeek + 1; // 1=Dom, 2=Seg, ...
+
+                foreach ($turmasCandidatas as $turma) {
+                    $temAulaNoDiaDaSemana = in_array($diaDaSemanaAtual, $diasDeAulaPorTurma[$turma->id]);
+                    $estaNoPeriodoDaTurma = $data->between(
+                        $turma->data_inicio_turma,
+                        $turma->data_termino_turma
+                    );
+
+                    if ($temAulaNoDiaDaSemana && $estaNoPeriodoDaTurma) {
+                        $turmasNesteDia[] = $turma;
+                    }
+                }
+
+                // Nós queremos a chave da data mesmo se não houver turmas
+                // para que o JS saiba que o dia está vazio.
+                $calendario[$data->toDateString()] = $turmasNesteDia;
+            }
+
+            // =========================================================================
+            // PASSO 3: Montar a resposta unificada
+            // =========================================================================
+            $resposta = [
+                'ambientes' => $ambientes,
+                'agendamentos' => $calendario
+            ];
+
+            return response()->json($resposta);
+        } catch (\Exception $e) {
+            return response()->json([
+                'erro' => 'Ocorreu um erro interno ou os parâmetros de data são inválidos.',
                 'mensagem' => $e->getMessage()
             ], 500);
         }
