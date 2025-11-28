@@ -515,4 +515,19 @@ class TurmaController extends Controller
             ], 500);
         }
     }
+    public function getTurmasIniciadas(): JsonResponse
+    {
+        // Alterado de whereHas para where direto (muito mais performático)
+        $turmasIniciadas = Turma::with(['curso', 'ambiente', 'statusTurma', 'minutosAula', 'turno', 'colaboradores', 'diasDaSemana'])
+            ->where('status_turma_id', 3)
+            ->get();
+
+        // Contagem feita na coleção (sem gastar outra consulta no banco)
+        $quantTurmas = $turmasIniciadas->count();
+
+        return response()->json([
+            'quantidade' => $quantTurmas,
+            'turmas' => TurmaResource::collection($turmasIniciadas)
+        ]);
+    }
 }

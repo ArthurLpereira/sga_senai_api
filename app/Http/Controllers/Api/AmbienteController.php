@@ -181,4 +181,55 @@ class AmbienteController extends Controller
 
         return response()->json($resultado);
     }
+
+    public function getOcupacaoSemanal(): JsonResponse
+    {
+        // 1. Total de ambientes para o cálculo (Denominador)
+        // Estou pegando TODOS para garantir que não dê erro de divisão por zero.
+        // Se quiser apenas os ativos, use: ->where('status_ambiente', '1')->count();
+        $totalAmbientes = Ambiente::count();
+
+        if ($totalAmbientes == 0) {
+            return response()->json([]);
+        }
+
+        // 2. Mapeamento: ID no Banco (tabela dias_da_semana) => Sigla no Gráfico
+        $diasSemana = [
+            2 => 'Seg',
+            3 => 'Ter',
+            4 => 'Qua',
+            5 => 'Qui',
+            6 => 'Sex',
+            7 => 'Sáb'
+        ];
+
+        $dadosGrafico = [];
+
+        foreach ($diasSemana as $idDia => $siglaTela) {
+
+            // 3. A Query Principal
+            $ambientesOcupadosNesteDia = Turma::query()
+                ->where('status_turma_id', 3) // <--- AQUI ESTÁ A REGRA: Apenas turmas ativas (Iniciadas)
+                ->whereHas('diasDaSemana', function ($query) use ($idDia) {
+                    // Filtra pela tabela pivot onde o dia é o do loop atual
+                    // Garante que a tabela pivot se chama 'dia_da_semana_turma'
+                    $query->where('dia_da_semana_turma.dia_da_semana_id', $idDia);
+                })
+                ->whereNotNull('ambiente_id') // Turma tem que ter sala definida
+                ->distinct('ambiente_id')     // Se tiver 2 turmas na mesma sala no mesmo dia, conta só 1 ocupação
+                ->count('ambiente_id');
+
+            // 4. Cálculo da porcentagem
+            $percentual = ($ambientesOcupadosNesteDia / $totalAmbientes) * 100;
+
+            $dadosGrafico[] = [
+                'dia' => $siglaTela,
+                'percentual' => round($percentual, 0),
+                // Debug: se quiser ver no inspecionar elemento quantos achou
+                'debug_qtd' => $ambientesOcupadosNesteDia
+            ];
+        }
+
+        return response()->json($dadosGrafico);
+    }
 }
