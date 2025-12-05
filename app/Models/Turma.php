@@ -44,7 +44,7 @@ class Turma extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['nome_turma', 'capacidade_turma', 'data_inicio_turma', 'data_termino_turma', 'curso_id', 'ambiente_id', 'status_turma_id', 'minuto_aula_id', 'turno_id'];
+    protected $fillable = ['nome_turma', 'capacidade_turma', 'capacidade_atual', 'data_inicio_turma', 'data_termino_turma', 'curso_id', 'ambiente_id', 'status_turma_id', 'minuto_aula_id', 'turno_id'];
 
 
     /**

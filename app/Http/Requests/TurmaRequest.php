@@ -24,6 +24,7 @@ class TurmaRequest extends FormRequest
         $regras =  [
             'nome_turma' => 'required|string',
             'capacidade_turma' => 'required',
+            'capacidade_atual' => 'sometimes',
             'data_inicio_turma' => 'required',
             'data_termino_turma' => 'sometimes|date|after_or_equal:data_inicio_turma',
             'data_termino_turma' => 'sometimes',
@@ -44,6 +45,7 @@ class TurmaRequest extends FormRequest
         if ($this->isMethod('put') || $this->isMethod('patch')) {
             $regras['nome_turma'] = 'sometimes|required|string';
             $regras['capacidade_turma'] = 'sometimes|required';
+            $regras['capacidade_atual'] = 'sometimes|required';
             $regras['data_inicio_turma'] = 'sometimes|required';
             $regras['data_termino_turma'] = 'sometimes|required';
             $regras['curso_id'] = 'sometimes|required';
